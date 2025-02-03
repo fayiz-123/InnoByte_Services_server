@@ -4,13 +4,18 @@ app.use(express.json())
 require('dotenv').config()
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URL)
+
 const userRoutes = require('./routes/userRoutes')
 const adminRoutes = require('./routes/adminRoutes')
 const productRoutes = require('./routes/productRoutes')
 const orderRoutes = require('./routes/orderRoutes')
+const cartRoutes = require('./routes/cartRoutes')
+
+
 app.use('/', userRoutes)
 app.use('/admin', adminRoutes)
 app.use('/products', productRoutes)
+app.use('/cart', cartRoutes)
 app.use('/orders', orderRoutes)
 
 

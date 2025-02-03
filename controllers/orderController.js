@@ -1,16 +1,24 @@
+const Cart = require('../models/cartModel')
 const Order = require('../models/ordersModel')
 const OrderItem = require('../models/orderItemsModel')
-const Product = require('../models/productModel')
+
+//placeOrder
+
+async function placeOrder(req,res) {
+    try {
+       
+        
+    } catch (error) {
+        
+    }
+    
+}
 
 
 
 
 
 
-
-
-
-
-
-
-
+module.exports={
+    placeOrder
+}
