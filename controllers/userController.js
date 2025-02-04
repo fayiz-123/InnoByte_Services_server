@@ -28,7 +28,7 @@ async function signup(req, res) {
             const savedUser = await newUser.save()
             const token = jwt.sign({
                 userID: savedUser._id
-            },process.env.JWT_SECRET,{expiresIn:'1h'})
+            },process.env.JWT_SECRET,{expiresIn:'12h'})
             res.status(201).json({ success: true, message: "Account Created Successfully", savedUser,token })
         }
 
@@ -52,7 +52,7 @@ async function login(req, res) {
         }
         const token = jwt.sign({
             userID:existUser._id
-        },process.env.JWT_SECRET,{expiresIn:'1h'})
+        },process.env.JWT_SECRET,{expiresIn:'12h'})
 
         return res.status(200).json({
             success: true, existUser: {

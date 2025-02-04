@@ -100,7 +100,7 @@ async function deleteCartProduct(req, res) {
         return res.status(200).json({ success: true, message: "item removed from the cart Successfully", cart: savedCart })
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message })
+       return res.status(500).json({ success: false, message: error.message })
 
     }
 
