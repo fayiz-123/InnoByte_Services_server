@@ -54,13 +54,7 @@ async function login(req, res) {
             userID:existUser._id
         },process.env.JWT_SECRET,{expiresIn:'12h'})
 
-        return res.status(200).json({
-            success: true, existUser: {
-                username: existUser.username,
-                email: existUser.email,
-                address: existUser.address
-            },token
-        })
+        return res.status(200).json({success: true, token })
 
 
     } catch (error) {
