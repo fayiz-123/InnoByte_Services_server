@@ -1,6 +1,6 @@
 const User = require('../models/userModel')
 const bcrypt = require('bcrypt')
-require('dotenv').config
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 //signup
@@ -10,7 +10,7 @@ async function signup(req, res) {
 
         const existingUser = await User.findOne({ email: email })
         if (existingUser) {
-            res.status(400).json({ success: false, message: "Email already exist", })
+          return  res.status(400).json({ success: false, message: "Email already exist", })
 
         }
         else {
@@ -28,7 +28,7 @@ async function signup(req, res) {
             const savedUser = await newUser.save()
             const token = jwt.sign({
                 userID: savedUser._id
-            },process.env.JWT_SECRET,{expiresIn:'12h'})
+            },process.env.JWT_SECRET,{expiresIn:'1h'})
             res.status(201).json({ success: true, message: "Account Created Successfully", savedUser,token })
         }
 
@@ -44,15 +44,15 @@ async function login(req, res) {
         const { email, password } = req.body
         const existUser = await User.findOne({ email: email })
         if (!existUser) {
-            return res.status(400).json({ success: false, message: "email is invalid" })
+            return res.status(400).json({ success: false, message: "User not Found" })
         }
         const isValidPassword = await bcrypt.compare(password, existUser.password)
         if (!isValidPassword) {
-            return res.status(400).json({ success: false, message: "Password is invalid" })
+            return res.status(400).json({ success: false, message: "Incorrect Password" })
         }
         const token = jwt.sign({
             userID:existUser._id
-        },process.env.JWT_SECRET,{expiresIn:'12h'})
+        },process.env.JWT_SECRET,{expiresIn:'1h'})
 
         return res.status(200).json({success: true, token })
 
@@ -84,6 +84,8 @@ async function userprofile(req, res) {
 async function updateProfile(req, res) {
     try {
         const { id } = req.params
+        console.log(id);
+        
         const { username, address, password } = req.body
 
         const profile = await User.findById(id)

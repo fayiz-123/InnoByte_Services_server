@@ -53,7 +53,13 @@ async function updateCart(req, res) {
 
         const userId = req.user._id
         const { productId, action } = req.body
+        if(!productId || !action){
+          return  res.status(400).json({success:false,message:"productId and action required"})
+        }
         const cart = await Cart.findOne({ userId })
+        if(!cart){
+            return res.status(400).json({success:false,message:"Cart not found"})
+        }
         const existProductIndex = cart.products.findIndex((item) => item.productId.toString() === productId)
         if (existProductIndex === -1) {
             return res.status(400).json({ success: false, message: "Product not found in the cart" });
@@ -112,11 +118,14 @@ async function deleteCartProduct(req, res) {
 async function getCart(req, res) {
     try {
         const userId = req.user._id
-        const cart = await Cart.findOne({ userId })
+        const cart = await Cart.findOne({ userId }).populate('products.productId').populate('userId')
         if (!cart) {
             return res.status(400).json({ success: false, message: "Cart Not found" })
         }
-        return res.status(200).json({ success: true, cart })
+        const shippingAddress= cart.userId.address
+       
+        
+        return res.status(200).json({ success: true, cart ,address:shippingAddress})
 
 
     } catch (error) {

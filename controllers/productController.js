@@ -24,7 +24,7 @@ async function getOneProduct(req, res) {
         if (findProduct)
             res.status(200).json({ success: true, findProduct })
         else {
-            return res.status(402).json({ success: false, message: "Product not found" })
+            return res.status(404).json({ success: false, message: "Product not found" })
         }
     } catch (error) {
 
