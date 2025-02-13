@@ -28,7 +28,7 @@ async function signup(req, res) {
             const savedUser = await newUser.save()
             const token = jwt.sign({
                 userID: savedUser._id
-            },process.env.JWT_SECRET,{expiresIn:'1h'})
+            },process.env.JWT_SECRET,{expiresIn:'42h'})
             res.status(201).json({ success: true, message: "Account Created Successfully", savedUser,token })
         }
 
@@ -52,7 +52,7 @@ async function login(req, res) {
         }
         const token = jwt.sign({
             userID:existUser._id
-        },process.env.JWT_SECRET,{expiresIn:'1h'})
+        },process.env.JWT_SECRET,{expiresIn:'42h'})
 
         return res.status(200).json({success: true, token })
 
@@ -84,7 +84,6 @@ async function userprofile(req, res) {
 async function updateProfile(req, res) {
     try {
         const { id } = req.params
-        console.log(id);
         
         const { username, address, password } = req.body
 
@@ -97,10 +96,6 @@ async function updateProfile(req, res) {
         }
 
         if (username) profile.username = username
-        if (password) {
-            const hashPassword = await bcrypt.hash(password, 10)
-            profile.password = hashPassword
-        }
         if (address) {
             profile.address = {
                 street: address.street || profile.address.street,

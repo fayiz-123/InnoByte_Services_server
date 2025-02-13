@@ -20,6 +20,11 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: [true, "Product stock is required"],
         min: [0, "Stock cannot be less than 0"]
+    },
+    image:{
+        type:String,
+        required:[true,"Image is required"]
+
     }
 
 }, { timestamps: true })

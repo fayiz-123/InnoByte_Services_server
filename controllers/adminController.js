@@ -45,7 +45,7 @@ async function adminLoggedIn(req, res) {
             const token = jwt.sign({
                 adminId: checkAdmin._id
             }, process.env.JWT_SECRET, { expiresIn: '1h' })            
-            res.status(200).json({ success: true, message: "Admin LoggedIn Successfull", tok:token })
+            res.status(200).json({ success: true, message: "Admin LoggedIn Successfull", token:token })
            
             
         }

@@ -3,7 +3,7 @@ const Product = require('../models/productModel')
 //allProducts
 async function allProducts(req, res) {
     try {
-        const allProduct = await Product.find()
+        const allProduct = await Product.find({stock:{$gt:0}})
         res.status(201).json({ success: true, allProduct })
 
     } catch (error) {
@@ -38,7 +38,8 @@ async function getOneProduct(req, res) {
 async function addProducts(req, res) {
     try {
         const { name, description, price, stock } = req.body
-        const addProducts = new Product({ name: name, description: description, price: price, stock: stock })
+        
+        const addProducts = new Product({ name, description, price, stock, image:req.file.path.replace(/^.*[\\/]/, '') })
         const newProducts = await addProducts.save()
         res.status(200).json({ success: true, message: "Product Added Successfully", newProducts })
 
@@ -53,6 +54,8 @@ async function updateProduct(req, res) {
     try {
         const { id } = req.params
         const { name, description, price, stock } = req.body
+       const image = req.file.path.replace(/^.*[\\/]/, '')
+        
         const findProd = await Product.findById(id)
         if (!findProd) {
             return res.status(400).json({ success: false, message: "Invalid Product ID" })
@@ -65,6 +68,9 @@ async function updateProduct(req, res) {
         if (description) findProd.description = description
         if (price) findProd.price = price
         if (stock) findProd.stock = stock
+        if(image) findProd.image = image
+
+       
 
         const updatedProduct = await findProd.save()
         res.status(201).json({ success: true, message: "Product Update Succcessfully", updatedProduct })

@@ -1,6 +1,7 @@
 const Cart = require('../models/cartModel')
 const Order = require('../models/ordersModel')
-const OrderItem = require('../models/orderItemsModel')
+const Product = require('../models/productModel')
+const OrderItem = require('../models/orderItemsModel');
 
 //placeOrder
 
@@ -13,7 +14,7 @@ async function placeOrder(req, res) {
             return res.status(400).json({ success: false, message: "Cart is empty" })
         }
         const totalamount = cart.products.reduce((total, item) => {
-            return (total + item.quantity * item.productId.price)+10
+            return (total + item.quantity * item.productId.price) + 10
         }, 0)
         const newOrder = new Order({
             userId: userId,
@@ -21,7 +22,7 @@ async function placeOrder(req, res) {
             status: 'Pending'
         })
         const saveOrder = await newOrder.save()
-
+       
         const orderItems = cart.products.map((item) => ({
             orderId: saveOrder._id,
             productId: item.productId._id,
@@ -29,8 +30,19 @@ async function placeOrder(req, res) {
             price: item.productId.price
         }))
         await OrderItem.insertMany(orderItems)
+        await Promise.all(
+            cart.products.map(async (item) => {
+                await Product.findByIdAndUpdate(
+                    item.productId._id,
+                    { $inc: { stock: -item.quantity } }
+                );
+            })
+        );
+
         cart.products = []
         await cart.save()
+
+
 
         return res.status(201).json({ success: true, message: "Order Placed Successfully", saveOrder })
 
@@ -50,18 +62,18 @@ async function getOrder(req, res) {
         const userId = req.user._id
         const orders = await Order.find({ userId }).sort({ createdAt: -1 })
         if (!orders || orders.length === 0) {
-            return res.status(400).json({ success: false, message: "Order Not Found",orders:[]})
+            return res.status(400).json({ success: false, message: "Order Not Found", orders: [] })
         }
         const orderswithItems = await Promise.all(orders.map(async (order) => {
             const orderItem = await OrderItem.find({ orderId: order._id }).populate('productId')
             return {
                 ...order.toObject(),
                 orderItem,
-                totalamount:order.totalamount
+                totalamount: order.totalamount
             }
         }))
-       
-        
+
+
 
         res.status(200).json({ success: true, orderswithItems, })
 

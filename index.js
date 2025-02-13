@@ -4,6 +4,7 @@ app.use(express.json())
 require('dotenv').config()
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URL)
+app.use('/uploads', express.static('uploads'));
 const cors = require('cors')
 app.use(cors())
 
