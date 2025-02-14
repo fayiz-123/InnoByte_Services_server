@@ -6,7 +6,17 @@ const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URL)
 app.use('/uploads', express.static('uploads'));
 const cors = require('cors')
-app.use(cors())
+const allowedOrigins = ['http://localhost:5173'];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 
 
 const userRoutes = require('./routes/userRoutes')
