@@ -63,6 +63,9 @@ async function updateProduct(req, res) {
         if (!name && !description && !price && !stock) {
             return res.status(402).json({ success: false, message: "No updates available" })
         }
+        if(!image){
+            res.status(400).json({success:false,message:"Image should be needed"})
+        }
 
         if (name) findProd.name = name
         if (description) findProd.description = description

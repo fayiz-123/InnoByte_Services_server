@@ -1,4 +1,5 @@
 const Admin = require('../models/adminModel')
+const Product = require('../models/productModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config
@@ -49,17 +50,28 @@ async function adminLoggedIn(req, res) {
            
             
         }
-
     } catch (error) {
         res.status(500).json({ success: false, message: error.message })
 
     }
 
 }
+//allProducts
+async function allProducts(req, res) {
+    try {
+        const allProduct = await Product.find()
+        res.status(201).json({ success: true, allProduct })
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message })
+
+    }
+}
 
 
 module.exports = {
     adminRegistration,
-    adminLoggedIn
+    adminLoggedIn,
+    allProducts
 }
 

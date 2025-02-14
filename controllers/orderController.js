@@ -13,9 +13,18 @@ async function placeOrder(req, res) {
         if (!cart || cart.products.length === 0) {
             return res.status(400).json({ success: false, message: "Cart is empty" })
         }
+        for (const item of cart.products) {
+            if (item.quantity > item.productId.stock) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: `Insufficient stock for product ${item.productId.name || item.productId._id}` 
+                });
+            }
+        }
         const totalamount = cart.products.reduce((total, item) => {
             return (total + item.quantity * item.productId.price) + 10
         }, 0)
+    
         const newOrder = new Order({
             userId: userId,
             totalamount: totalamount,
