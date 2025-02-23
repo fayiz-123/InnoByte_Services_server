@@ -24,6 +24,7 @@ const adminRoutes = require('./routes/adminRoutes')
 const productRoutes = require('./routes/productRoutes')
 const orderRoutes = require('./routes/orderRoutes')
 const cartRoutes = require('./routes/cartRoutes')
+const wishListRoutes = require('./routes/wishListRoutes')
 
 
 app.use('/', userRoutes)
@@ -31,6 +32,8 @@ app.use('/admin', adminRoutes)
 app.use('/products', productRoutes)
 app.use('/cart', cartRoutes)
 app.use('/orders', orderRoutes)
+app.use('/wishlist', wishListRoutes)
+
 
 
 
