@@ -1,13 +1,14 @@
 const Product = require('../models/productModel')
+const QrCode = require('qrcode')
 
 //allProducts
 async function allProducts(req, res) {
     try {
         const allProduct = await Product.find({stock:{$gt:0}})
-        res.status(201).json({ success: true, allProduct })
+       return res.status(201).json({ success: true, allProduct })
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message })
+       return res.status(500).json({ success: false, message: error.message })
 
     }
 }
@@ -37,10 +38,14 @@ async function getOneProduct(req, res) {
 //addProducts
 async function addProducts(req, res) {
     try {
-        const { name, description, price, stock } = req.body
+        const { name, description, price, stock } = req.body        
         
         const addProducts = new Product({ name, description, price, stock, image:req.file.path.replace(/^.*[\\/]/, '') })
         const newProducts = await addProducts.save()
+        const productUrl = ` localhost:5173/product/${newProducts._id}`
+        const qrCodeData = await QrCode.toDataURL(productUrl)
+        newProducts.qrCode=qrCodeData
+        await newProducts.save()
         res.status(200).json({ success: true, message: "Product Added Successfully", newProducts })
 
     } catch (error) {

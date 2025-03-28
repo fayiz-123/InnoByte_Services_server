@@ -29,7 +29,7 @@ async function signup(req, res) {
             const token = jwt.sign({
                 userID: savedUser._id
             },process.env.JWT_SECRET,{expiresIn:'42h'})
-            res.status(201).json({ success: true, message: "Account Created Successfully", savedUser,token })
+           return res.status(201).json({ success: true, message: "Account Created Successfully", savedUser,token })
         }
 
     } catch (error) {
@@ -58,7 +58,7 @@ async function login(req, res) {
 
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message })
+       return res.status(500).json({ success: false, message: error.message })
 
     }
 }
